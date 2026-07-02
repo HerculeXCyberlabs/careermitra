@@ -59,9 +59,19 @@ export function extractCloseDate(text: string): string | null {
   return null;
 }
 
+// The most recent 4-digit year mentioned (2000–2099), used to filter out stale/archived notices.
+// Returns null when no year is present — the caller treats "unknown" as "possibly current".
+export function extractNoticeYear(text: string): number | null {
+  const years = [...text.matchAll(/\b(?:19|20)\d{2}\b/g)]
+    .map((m) => Number(m[0]))
+    .filter((y) => y >= 2000 && y <= 2099);
+  return years.length ? Math.max(...years) : null;
+}
+
 export interface Extracted {
   closeDate: string | null;
   vacancyCount: number | null;
+  noticeYear: number | null;
   confidence: number; // 0..1 — how much high-impact data we captured
   source: 'title' | 'detail' | 'none';
 }
@@ -70,6 +80,7 @@ export function extractFields(title: string, detailText?: string): Extracted {
   const text = detailText ? `${title}\n${detailText}` : title;
   const vacancyCount = extractVacancyCount(text);
   const closeDate = extractCloseDate(text);
+  const noticeYear = extractNoticeYear(text);
   let confidence = 0.2; // baseline: we at least have a classified, provenance-linked notice
   if (vacancyCount !== null) confidence += 0.4;
   if (closeDate !== null) confidence += 0.4;
@@ -78,5 +89,5 @@ export function extractFields(title: string, detailText?: string): Extracted {
     : vacancyCount !== null || closeDate !== null
       ? 'title'
       : 'none';
-  return { closeDate, vacancyCount, confidence: Math.min(1, confidence), source };
+  return { closeDate, vacancyCount, noticeYear, confidence: Math.min(1, confidence), source };
 }

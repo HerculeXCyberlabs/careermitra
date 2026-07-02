@@ -45,7 +45,7 @@ export interface ImportResult {
 
 const REQUIRED = ['source_id', 'name', 'sector', 'official_domain', 'notice_list_url'];
 
-export function importSources(file: string): ImportResult {
+export async function importSources(file: string): Promise<ImportResult> {
   const rows = parseCsv(readFileSync(file, 'utf8')).filter((r) => r.some((c) => c.trim() !== ''));
   if (rows.length < 2) throw new Error('CSV has a header but no data rows.');
 
@@ -55,7 +55,7 @@ export function importSources(file: string): ImportResult {
   }
   const at = (name: string) => header.indexOf(name);
 
-  const store = load();
+  const store = await load();
   const byId = new Map<string, CanonicalSource>(store.sources.map((s) => [s.id, s]));
   const errors: string[] = [];
   let imported = 0;
@@ -97,6 +97,6 @@ export function importSources(file: string): ImportResult {
   }
 
   store.sources = [...byId.values()];
-  save(store);
+  await save(store);
   return { total: rows.length - 1, imported, skipped, errors };
 }

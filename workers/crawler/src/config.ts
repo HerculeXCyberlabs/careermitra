@@ -19,4 +19,8 @@ export const config = {
   // S027 — when true, the pipeline also fetches each notice's detail page (HTML only, not PDFs) to
   // extract close date / vacancies. Off by default because it costs one polite request per notice.
   fetchDetails: (process.env.CRAWLER_FETCH_DETAILS ?? 'false') === 'true',
+
+  // S030 — storage backend. 'json' = local file (default); 'pg' = Postgres (see docker-compose.yml).
+  store: (process.env.CM_STORE ?? 'json') as 'json' | 'pg',
+  databaseUrl: process.env.DATABASE_URL ?? 'postgres://cm:cm_dev_pw@localhost:5439/careermitra',
 };

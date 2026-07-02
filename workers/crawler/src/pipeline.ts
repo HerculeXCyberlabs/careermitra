@@ -49,8 +49,8 @@ export function allSources(store: StoreShape): CanonicalSource[] {
   return [...byId.values()];
 }
 
-export function listSourceIds(): SourceId[] {
-  return allSources(load()).map((s) => s.id);
+export async function listSourceIds(): Promise<SourceId[]> {
+  return allSources(await load()).map((s) => s.id);
 }
 
 export interface IngestResult {
@@ -61,7 +61,7 @@ export interface IngestResult {
 }
 
 export async function ingest(sourceId: SourceId): Promise<IngestResult> {
-  const store = load();
+  const store = await load();
   const source = allSources(store).find((s) => s.id === sourceId);
   if (!source) {
     throw new Error(`Unknown source '${sourceId}'. Import it (import-sources) or check the id.`);
@@ -74,7 +74,7 @@ export async function ingest(sourceId: SourceId): Promise<IngestResult> {
   } catch (e) {
     // S029 — record the failure so the source shows as unhealthy instead of failing silently.
     upsertHealth(store, sourceId, 'failed', { fetched: 0, added: 0, duplicates: 0, error: (e as Error).message });
-    save(store);
+    await save(store);
     throw e;
   }
 
@@ -143,6 +143,6 @@ export async function ingest(sourceId: SourceId): Promise<IngestResult> {
     duplicates,
     error: null,
   });
-  save(store);
+  await save(store);
   return { sourceId, fetched: listings.length, added, duplicates };
 }

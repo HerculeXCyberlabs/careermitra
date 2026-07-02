@@ -9,7 +9,7 @@
 
 import { ingest, listSourceIds, allSources } from './pipeline.js';
 import { importSources } from './import-sources.js';
-import { load, save } from './store.js';
+import { load, save, closeStore } from './store.js';
 import type { SourceId } from './types.js';
 
 const [, , command, ...args] = process.argv;
@@ -28,24 +28,24 @@ function help(): void {
 `);
 }
 
-function runImport(): void {
+async function runImport(): Promise<void> {
   const file = args[0];
   if (!file) { console.error('Usage: import-sources <file.csv>'); return; }
-  const r = importSources(file);
+  const r = await importSources(file);
   console.log(`Imported ${r.imported} source(s); skipped ${r.skipped}; total data rows ${r.total}.`);
   for (const e of r.errors.slice(0, 20)) console.log(`  ! ${e}`);
   if (r.errors.length > 20) console.log(`  ...and ${r.errors.length - 20} more.`);
   console.log(`\nNext:  npx tsx src/cli.ts sources   then   npx tsx src/cli.ts ingest <id>`);
 }
 
-function runSources(): void {
-  const sources = allSources(load());
+async function runSources(): Promise<void> {
+  const sources = allSources(await load());
   console.log(`${sources.length} registered source(s):`);
   for (const s of sources) console.log(`  ${s.id}  [${s.sector}]  ${s.name}  → ${s.listingUrl}`);
 }
 
-function runHealth(): void {
-  const store = load();
+async function runHealth(): Promise<void> {
+  const store = await load();
   const sources = allSources(store);
   const byId = new Map(store.health.map((h) => [h.sourceId, h]));
   const n = (s: string) => store.health.filter((h) => h.status === s).length;
@@ -76,7 +76,7 @@ function runHealth(): void {
 
 async function runIngest(): Promise<void> {
   const target = args[0] ?? 'all';
-  const ids: SourceId[] = target === 'all' ? listSourceIds() : [target];
+  const ids: SourceId[] = target === 'all' ? await listSourceIds() : [target];
   if (ids.length === 0) { console.log('No sources registered. Import the CSV first.'); return; }
   for (const id of ids) {
     process.stdout.write(`\n▶ Ingesting ${id} ...\n`);
@@ -90,9 +90,9 @@ async function runIngest(): Promise<void> {
   console.log(`\nNext: verify before anything is public →  npx tsx src/cli.ts review list`);
 }
 
-function runReview(): void {
+async function runReview(): Promise<void> {
   const sub = args[0];
-  const store = load();
+  const store = await load();
 
   if (sub === 'list') {
     const typeFilter = args[1]; // optional: review list job | result | admit_card | ...
@@ -138,7 +138,7 @@ function runReview(): void {
     o.updatedAt = now;
     const task = store.reviewTasks.find((t) => t.opportunityId === id && t.status === 'created');
     if (task) { task.status = sub === 'approve' ? 'approved' : 'rejected'; task.decidedAt = now; }
-    save(store);
+    await save(store);
     console.log(sub === 'approve' ? `✓ Published: ${o.title}` : `✗ Rejected: ${o.title}`);
     return;
   }
@@ -146,8 +146,8 @@ function runReview(): void {
   console.log('Usage: review list | review approve <id> | review reject <id>');
 }
 
-function runList(): void {
-  const store = load();
+async function runList(): Promise<void> {
+  const store = await load();
   const status = args[0];
   const rows = store.opportunities.filter((o) => !status || o.status === status);
   console.log(`${rows.length} opportunit${rows.length === 1 ? 'y' : 'ies'}${status ? ` (status=${status})` : ''}:`);
@@ -156,14 +156,20 @@ function runList(): void {
 
 async function main(): Promise<void> {
   switch (command) {
-    case 'import-sources': runImport(); break;
-    case 'sources': runSources(); break;
-    case 'health': runHealth(); break;
+    case 'import-sources': await runImport(); break;
+    case 'sources': await runSources(); break;
+    case 'health': await runHealth(); break;
     case 'ingest': await runIngest(); break;
-    case 'review': runReview(); break;
-    case 'list': runList(); break;
+    case 'review': await runReview(); break;
+    case 'list': await runList(); break;
     default: help();
   }
 }
 
-main().catch((e) => { console.error(e); process.exit(1); });
+main()
+  .then(() => closeStore())
+  .catch(async (e) => {
+    console.error(e);
+    await closeStore();
+    process.exit(1);
+  });

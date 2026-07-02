@@ -16,7 +16,7 @@
 | Measure | Status |
 |---|---|
 | Sprints complete (incl. docs/design) | **13 / 100 (~13%)** — S001–S009, S021–S024 |
-| Current position | ✅ S021–S024, S027, S027b, S028, S029 done → 👉 **S030** (Postgres — the seam to the Platform) is the last Data Engine sprint |
+| Current position | ✅ Data Engine complete **+ Part 2 web app live**: landing page, jobs list with **search + sector filters**, **job detail pages + SEO**, and a **profile/personalization** surface (cookie-based) — all reading verified jobs from Postgres, all tested. 👉 Next: real eligibility (needs rule extraction), Org/Exam profile pages (S038), auth (S012), formalize monorepo (S010) |
 | **Data Engine (Part 1)** toward its MVP | **~40%** (S021–S024 of S021–S030 done) |
 | **Platform (Part 2)** — user-facing product | **~0%** (no app/API/auth/search yet) |
 | Actual user-facing product built | **~2–3%** |
@@ -72,7 +72,7 @@
 | S027c | OCR for scanned PDFs + reliable close-date extraction | §25 | S027b | ⏸ FUTURE (needs Tesseract; dates human-verified until then) |
 | S028 | Entity resolution (canonical org id) + semantic dedup (fuzzy + borderline→human) | §7 | S027 | ✅ DONE (Exam mapping deferred to S016) |
 | S029 | Source health monitoring + run reports (`health` command: ok/empty/failed/never) | §26 | S027 | ✅ DONE |
-| S030 | **Postgres store** (swap JSON) + history/trends capture at ingest | §11 | S028, S011 | ⬜ PENDING |
+| S030 | **Postgres store** (swap JSON, same interface) + schema + docker | §11 | S028 | ✅ DONE (verified end-to-end; history capture = future) |
 
 ## Phase 5 — Jobs & Search (S031–S040) · ⬜ NOT STARTED  ← *first user-visible output*
 | # | Objective | PRD | Depends on | Status |

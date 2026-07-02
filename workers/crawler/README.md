@@ -57,6 +57,20 @@ npx tsx src/cli.ts list published       # only verified/published
 ```
 Data is written to `./data/store.json`. (Typecheck with `npm run typecheck`, compile with `npm run build`.)
 
+## Storage: JSON (default) or Postgres (S030)
+By default the store is a local JSON file. To use **Postgres** (the same interface, no pipeline change):
+```bash
+npm run db:up                          # start Postgres in Docker (schema auto-applied)
+export CM_STORE=pg                     # or set CM_STORE=pg in .env
+npx tsx src/cli.ts import-sources data-intake/source-registry.csv
+npx tsx src/cli.ts ingest drdo-rac
+npx tsx src/cli.ts review list job
+npm run db:down                        # stop (data kept in the cm_pgdata volume)
+```
+Connection defaults to `postgres://cm:cm_dev_pw@localhost:5439/careermitra` (override with `DATABASE_URL`).
+Schema lives in `db/schema.sql` (schemas `crawler` / `recruitment` / `admin`, mirroring `docs/04_Database`).
+This is the **seam to the Platform (Part 2)**: a backend API reads these same Postgres tables.
+
 ## Step 4 — tuning a source (the one part you finish)
 Because government pages differ, the generic adapter filters links by **keywords**. If an ingest
 prints `0 candidates`:

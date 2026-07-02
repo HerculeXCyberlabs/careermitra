@@ -22,12 +22,14 @@ The moat is the **verified data**, so we build data-first, then the platform on 
 
 ## 2. Current status (the one-glance version)
 - **Planning/docs:** ~90% complete (fundable PRD + architecture + DB/API design + 100-sprint plan).
-- **Data Engine (Part 1):** working end-to-end on real government sources — **~85% of its MVP**.
-- **Platform (Part 2):** **0%** — no app, API, auth, or UI yet. `apps/`, `services/`, `packages/` are empty.
-- **Overall user-facing product:** ~3%. We have a strong backend + world-class docs, not a usable app yet.
+- **Data Engine (Part 1):** ✅ **MVP complete** (S021–S030) — verified end-to-end on real government sources, persisting to Postgres.
+- **Platform (Part 2):** 🔨 **web app working** — `apps/web` (Next.js, SSR) has: landing page w/ live stats, jobs list with **search + sector filters**, **job detail pages + SEO metadata**, and a cookie-based **profile/personalization** page. All read verified jobs from Postgres. NestJS modules / auth / real eligibility still to come.
+- **Overall user-facing product:** ~10%. A browsable, filterable app now exists end-to-end.
 
-**Sprints complete:** S001–S009 (foundation + architecture design), **S021–S024, S027, S027b, S028, S029** (Data Engine).
-**Next sprint:** 👉 **S030 — Postgres store** (the seam to the Platform). See §6.
+**Sprints complete:** S001–S009 (foundation + architecture design), **S021–S030** (Data Engine), **+ Part 2 lean slice** (Next.js job page).
+**Next:** formalize the monorepo (S010), add **search/filters** (S034/S035), then **profile + eligibility + Career DNA** (S014/S042/S046). See §6.
+
+**Run the app:** `cd workers/crawler && npm run db:up` (with published jobs), then `cd apps/web && npm install && npm run dev` → http://localhost:3000/jobs
 
 Full, authoritative status board: **`docs/09_Sprints/PROJECT_STATUS.md`** (and `.xlsx`).
 
@@ -112,11 +114,17 @@ Data is written to `workers/crawler/data/store.json` (git-ignored).
 ---
 
 ## 6. What to do next (resume point)
-### 👉 S030 — Postgres store (the last Data Engine sprint)
-Swap the JSON store (`store.ts`) for Postgres **behind the same `load()`/`save()` interface**, matching
-the schema in `docs/04_Database`. This is the **seam to the Platform (Part 2)**. Also capture
-history/trends at ingest (PRD §11).
-**Prereq:** a running Postgres instance (Docker or local/cloud). This is the one sprint that needs infra.
+### ✅ Data Engine (Part 1) is DONE — 👉 start Part 2 (the Platform)
+The crawler now persists to Postgres (`npm run db:up`, `CM_STORE=pg`). The next work is the
+**user-facing product**, which reads those same Postgres tables. Serial order:
+- **S010** — bootstrap the monorepo (`apps/`, `services/`, `packages/`), CI, lint, env contract
+- **S011** — wire the platform DB / migrations (build on `workers/crawler/db/schema.sql`)
+- **S020** — API gateway + shared packages
+- **S031 → S033 → S035** — Opportunity service → **first server-rendered job page** → search
+- Then the differentiator: **S014 → S041 → S042 → S043 → S046** (profile → eligibility → skills → Career DNA)
+
+This is the first work that produces something a **user can see**. Data Engine deepening
+(history/trends capture at ingest, PRD §11) can happen in parallel when needed.
 
 ### Deferred / future (don't block on these)
 - **S025 / S027c** — JS-rendered sources (CERT-In, NIC, SSC) need a headless browser; and scanned-PDF

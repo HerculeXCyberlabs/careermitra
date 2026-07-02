@@ -49,6 +49,7 @@ export function normalize(
     officialUrl: raw.detailUrl,
     closeDate: ex.closeDate ?? raw.hints?.closeDate ?? null,
     vacancyCount: ex.vacancyCount ?? raw.hints?.vacancyCount ?? null,
+    noticeYear: ex.noticeYear,
     examName: raw.hints?.examName ?? null,
     extractionConfidence: ex.confidence,
     dedupKey: dedupKey(organizationId, raw.title),

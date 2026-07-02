@@ -70,6 +70,7 @@ export interface CanonicalOpportunity {
   officialUrl: string;
   closeDate: string | null;
   vacancyCount: number | null;     // S027 — extracted number of posts
+  noticeYear: number | null;       // most recent year mentioned; used for freshness filtering
   examName: string | null;
   extractionConfidence: number;    // S027 — 0..1; low + high-impact field ⇒ human-verify (§5)
   dedupKey: string;                // S028 — hash of the semantic signature (orgId + title tokens)
