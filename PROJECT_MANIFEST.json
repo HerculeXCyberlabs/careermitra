@@ -1,0 +1,328 @@
+{
+  "$schema": "https://json.schemastore.org/package.json",
+  "name": "careermitra-engineering-foundation",
+  "project": "CareerMitra",
+  "company": "Astralabs Technologies LLP",
+  "repositoryRoot": "D:\\Astralabs\\CareerMitra",
+  "version": "1.0.0",
+  "schemaVersion": 1,
+  "kind": "engineering-foundation",
+  "status": "long-term-product",
+  "description": "Machine-readable index of the CareerMitra engineering foundation: governance files, canonical modules, documentation taxonomy, conventions and ownership. Parsed by AI tools and automation to understand the repository.",
+  "sourceOfTruth": "PROJECT_CONTEXT.md",
+  "governance": {
+    "context": "PROJECT_CONTEXT.md",
+    "rules": "PROJECT_RULES.md",
+    "aiInstructions": "AI_INSTRUCTIONS.md",
+    "contributing": "CONTRIBUTING.md",
+    "manifest": "PROJECT_MANIFEST.json"
+  },
+  "principles": [
+    "Trustworthy by default — accuracy and proof outrank delight; unverified data is never shipped.",
+    "Clarity over cleverness — plain language, one obvious next step, no dark patterns.",
+    "Mobile-first, low-friction — works on 3G; 16px min body; 44px touch targets.",
+    "A companion, not a form — reduce anxiety; surface deadlines; remember documents.",
+    "Accessible & multilingual — WCAG 2.1 AA; English, Hindi and regional scripts.",
+    "Consent and privacy are non-negotiable — never act on a citizen's behalf without explicit consent."
+  ],
+  "glossary": {
+    "Opportunity": "Any listing: government job, scholarship, internship, or apprenticeship.",
+    "Notification": "The official published announcement an Opportunity is derived from.",
+    "Aspirant": "An end-user pursuing a government career.",
+    "Journey": "The aspirant's tracked set of opportunities, documents, dates and applications.",
+    "Eligibility": "The rules (age, education, category, domicile) that gate an Opportunity.",
+    "Vault": "The Document Vault — the aspirant's secure store of identity/education documents.",
+    "Ingestion": "The pipeline that turns Notifications into verified canonical Opportunities.",
+    "VerificationGate": "The step that blocks unverified data (dates/eligibility) from publish.",
+    "Grounding": "Basing an AI answer strictly on verified data or cited official sources."
+  },
+  "dataSensitivityLevels": {
+    "public": "Publishable, cacheable, indexable (verified opportunity listings).",
+    "internal": "Operational data (logs, metrics) — access-controlled.",
+    "pii": "Aspirant personal data — encrypted, minimized, access-controlled.",
+    "sensitive-pii": "Identity/education documents & form data — highest protection, field-level encryption, full audit.",
+    "secret": "Keys, tokens, credentials — vault only, never in git or logs."
+  },
+  "modules": [
+    {
+      "id": "government-jobs",
+      "name": "Government Jobs",
+      "domain": "discovery",
+      "purpose": "Discover verified government job opportunities.",
+      "dataSensitivity": "public",
+      "dependsOn": [
+        "ingestion",
+        "eligibility-engine"
+      ]
+    },
+    {
+      "id": "results",
+      "name": "Results",
+      "domain": "discovery",
+      "purpose": "Surface and track official exam results.",
+      "dataSensitivity": "sensitive-pii",
+      "dependsOn": [
+        "ingestion",
+        "notification-engine"
+      ]
+    },
+    {
+      "id": "admit-cards",
+      "name": "Admit Cards",
+      "domain": "discovery",
+      "purpose": "Surface and retrieve official admit cards.",
+      "dataSensitivity": "sensitive-pii",
+      "dependsOn": [
+        "ingestion",
+        "notification-engine",
+        "document-vault"
+      ]
+    },
+    {
+      "id": "scholarships",
+      "name": "Scholarships",
+      "domain": "discovery",
+      "purpose": "Discover scholarship opportunities.",
+      "dataSensitivity": "public",
+      "dependsOn": [
+        "ingestion",
+        "eligibility-engine"
+      ]
+    },
+    {
+      "id": "internships",
+      "name": "Internships",
+      "domain": "discovery",
+      "purpose": "Discover government/PSU internship opportunities.",
+      "dataSensitivity": "public",
+      "dependsOn": [
+        "ingestion",
+        "eligibility-engine"
+      ]
+    },
+    {
+      "id": "apprenticeships",
+      "name": "Apprenticeships",
+      "domain": "discovery",
+      "purpose": "Discover apprenticeship opportunities.",
+      "dataSensitivity": "public",
+      "dependsOn": [
+        "ingestion",
+        "eligibility-engine"
+      ]
+    },
+    {
+      "id": "resume-builder",
+      "name": "Resume Builder",
+      "domain": "aspirant-tools",
+      "purpose": "Build a structured, export-ready resume.",
+      "dataSensitivity": "pii",
+      "dependsOn": [
+        "document-vault"
+      ]
+    },
+    {
+      "id": "resume-parser",
+      "name": "Resume Parser",
+      "domain": "aspirant-tools",
+      "purpose": "Extract structured profile data from an uploaded resume.",
+      "dataSensitivity": "sensitive-pii",
+      "dependsOn": [
+        "document-vault"
+      ]
+    },
+    {
+      "id": "document-vault",
+      "name": "Document Vault",
+      "domain": "aspirant-tools",
+      "purpose": "Securely store identity and education documents.",
+      "dataSensitivity": "sensitive-pii",
+      "dependsOn": []
+    },
+    {
+      "id": "application-tracker",
+      "name": "Application Tracker",
+      "domain": "aspirant-tools",
+      "purpose": "Track applications, stages and deadlines across opportunities.",
+      "dataSensitivity": "pii",
+      "dependsOn": [
+        "notification-engine",
+        "government-jobs",
+        "scholarships"
+      ]
+    },
+    {
+      "id": "eligibility-engine",
+      "name": "Eligibility Engine",
+      "domain": "intelligence",
+      "purpose": "Evaluate an aspirant against an opportunity's eligibility rules; explainable and auditable.",
+      "dataSensitivity": "pii",
+      "dependsOn": [
+        "document-vault"
+      ]
+    },
+    {
+      "id": "notification-engine",
+      "name": "Notification Engine",
+      "domain": "intelligence",
+      "purpose": "Deliver deadline/result/admit-card alerts across channels.",
+      "dataSensitivity": "pii",
+      "dependsOn": []
+    },
+    {
+      "id": "ai-career-assistant",
+      "name": "AI Career Assistant",
+      "domain": "intelligence",
+      "purpose": "Answer questions and guide the journey, strictly grounded in verified data.",
+      "dataSensitivity": "pii",
+      "dependsOn": [
+        "eligibility-engine",
+        "government-jobs",
+        "document-vault"
+      ],
+      "constraints": [
+        "must-ground-official-facts",
+        "no-guaranteed-outcomes",
+        "cite-official-sources"
+      ]
+    },
+    {
+      "id": "form-filling",
+      "name": "Form Filling Service",
+      "domain": "intelligence",
+      "purpose": "Assist filling official application forms from vault and profile data.",
+      "dataSensitivity": "sensitive-pii",
+      "dependsOn": [
+        "document-vault",
+        "resume-builder",
+        "eligibility-engine"
+      ],
+      "constraints": [
+        "consent-gated",
+        "never-auto-submit",
+        "never-store-external-credentials"
+      ]
+    }
+  ],
+  "documentationDomains": [
+    {
+      "code": "00_Overview",
+      "purpose": "Vision, glossary, cross-cutting overviews."
+    },
+    {
+      "code": "01_Product",
+      "purpose": "Product specs, personas, journeys."
+    },
+    {
+      "code": "02_UI",
+      "purpose": "Design-system usage, screens, UX flows."
+    },
+    {
+      "code": "03_Architecture",
+      "purpose": "System architecture, boundaries, views."
+    },
+    {
+      "code": "04_Database",
+      "purpose": "Schemas, ERDs, migrations, data contracts."
+    },
+    {
+      "code": "05_API",
+      "purpose": "API contracts, endpoints, error codes."
+    },
+    {
+      "code": "06_Security",
+      "purpose": "Threat models, auth, privacy, reviews."
+    },
+    {
+      "code": "07_DevOps",
+      "purpose": "CI/CD, infra, environments, observability."
+    },
+    {
+      "code": "08_Testing",
+      "purpose": "Test strategy, coverage, QA runbooks."
+    },
+    {
+      "code": "09_Sprints",
+      "purpose": "Sprint plans, retros, demos."
+    },
+    {
+      "code": "10_ADR",
+      "purpose": "Architecture Decision Records."
+    },
+    {
+      "code": "11_Runbooks",
+      "purpose": "Operational runbooks & incident response."
+    },
+    {
+      "code": "12_Decisions",
+      "purpose": "Non-architectural product/process decisions."
+    },
+    {
+      "code": "98_Templates",
+      "purpose": "All reusable templates."
+    },
+    {
+      "code": "99_Prompts",
+      "purpose": "AI prompt library per tool."
+    }
+  ],
+  "requiredFolderFiles": [
+    "README.md",
+    "Purpose.md",
+    "Naming.md",
+    "Examples.md",
+    "AI_RULES.md"
+  ],
+  "repositoryStructure": {
+    "docs": "Numbered documentation spine — single source of truth.",
+    "apps": "Deployable applications (web, admin).",
+    "services": "Backend services (per canonical module or domain).",
+    "packages": "Shared libraries (ui, types, config, sdk).",
+    "assets": "logos, figma, icons, images.",
+    "tools": "Repository automation (organizer, verification, doc generators)."
+  },
+  "rootFileAllowList": [
+    "PROJECT_CONTEXT.md",
+    "PROJECT_RULES.md",
+    "AI_INSTRUCTIONS.md",
+    "CONTRIBUTING.md",
+    "PROJECT_MANIFEST.json",
+    "README.md",
+    "LICENSE",
+    ".gitignore",
+    ".editorconfig",
+    ".gitattributes",
+    ".env.example"
+  ],
+  "aiMemoryTargets": [
+    ".claude/CLAUDE.md",
+    ".cursor/rules/",
+    ".github/copilot-instructions.md"
+  ],
+  "conventions": {
+    "commits": "Conventional Commits",
+    "versioning": "SemVer",
+    "apiVersioning": "URL-versioned (/v1)",
+    "branches": "type/scope-short-summary",
+    "docFiles": "PascalCase.md",
+    "sourceFiles": "kebab-case",
+    "components": "PascalCase",
+    "constantsAndEnv": "SCREAMING_SNAKE_CASE",
+    "endOfLine": "LF (CRLF for .ps1)"
+  },
+  "tooling": {
+    "language": "TypeScript (strict)",
+    "node": ">=20",
+    "packageManager": "pnpm",
+    "monorepo": "turborepo"
+  },
+  "hardConstraints": [
+    "No unverified official data is shipped (deadlines/eligibility pass the verification gate).",
+    "AI guidance must be grounded; no fabricated official facts; no guaranteed outcomes.",
+    "No action on a citizen's behalf without explicit, recorded consent (esp. Form Filling).",
+    "No secrets or real PII in version control; no PII in logs.",
+    "Document Vault / Resume Parser / Form Filling / identity / ingestion changes require Security Review.",
+    "External government-portal credentials are never stored."
+  ],
+  "generatedBy": "CareerMitra Engineering Foundation"
+}

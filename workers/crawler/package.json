@@ -1,0 +1,30 @@
+{
+  "name": "@careermitra/crawler",
+  "private": true,
+  "type": "module",
+  "version": "0.1.0",
+  "description": "CareerMitra ingestion worker — official-source data collection (SSC, RRB) with human verification.",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "build": "tsc",
+    "typecheck": "tsc --noEmit",
+    "cm": "tsx src/cli.ts",
+    "import-sources": "tsx src/cli.ts import-sources",
+    "ingest": "tsx src/cli.ts ingest",
+    "review": "tsx src/cli.ts review",
+    "list": "tsx src/cli.ts list"
+  },
+  "dependencies": {
+    "cheerio": "^1.0.0",
+    "pdf-parse": "^1.1.4",
+    "undici": "^6.27.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.7.0",
+    "@types/pdf-parse": "^1.1.5",
+    "tsx": "^4.19.1",
+    "typescript": "^5.6.2"
+  }
+}

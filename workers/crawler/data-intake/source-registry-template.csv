@@ -1,0 +1,11 @@
+source_id,name,organization_name,sector,jurisdiction,state,official_domain,notice_list_url,notice_list_type,opportunity_types,keywords,priority,notes
+ssc,Staff Selection Commission,Staff Selection Commission (SSC),central,central,,ssc.gov.in,https://ssc.gov.in/,javascript_rendered,jobs|results|admit_cards,recruit|notification|cgl|chsl|mts|gd|je|steno,5,Notice list loads via JS — the exact notice URL must be confirmed
+upsc,Union Public Service Commission,Union Public Service Commission (UPSC),central,central,,upsc.gov.in,https://upsc.gov.in/,static_html,jobs|results,recruit|notification|advt|examination,5,
+ibps,Institute of Banking Personnel Selection,IBPS,banking,national,,ibps.in,https://www.ibps.in/,static_html,jobs|results,crp|recruit|notification|po|clerk|so,5,
+sbi,State Bank of India (Careers),State Bank of India,banking,national,,sbi.co.in,https://sbi.co.in/web/careers,static_html,jobs,recruit|advertisement|po|clerk|so,4,
+rrb-cdg,Railway Recruitment Board Chandigarh,Railway Recruitment Board (RRB),railway,central,,rrbcdg.gov.in,https://www.rrbcdg.gov.in/,unknown,jobs|results|admit_cards,recruit|notification|cen|ntpc|group d|alp,5,RRB is federated — one row per board
+rrb-ald,Railway Recruitment Board Prayagraj,Railway Recruitment Board (RRB),railway,central,,rrbald.gov.in,https://www.rrbald.gov.in/,unknown,jobs|results,recruit|notification|cen,4,
+rrc-ner,Railway Recruitment Cell (Group D),Railway Recruitment Cell (RRC),railway,central,,rrcner.org,https://rrcner.org/,unknown,jobs,recruit|notification|cen|group d,3,RRC handles Level-1 (Group D)
+uppsc,Uttar Pradesh Public Service Commission,UPPSC,state,Uttar Pradesh,Uttar Pradesh,uppsc.up.nic.in,https://uppsc.up.nic.in/,static_html,jobs|results,recruit|advt|notification,4,
+bpsc,Bihar Public Service Commission,BPSC,state,Bihar,Bihar,bpsc.bih.nic.in,https://bpsc.bih.nic.in/,static_html,jobs|results,recruit|advt|notification,4,
+drdo,Defence Research and Development Organisation,DRDO,research,national,,drdo.gov.in,https://www.drdo.gov.in/drdo/careers,static_html,jobs,recruit|vacanc|advertisement,3,
